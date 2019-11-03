@@ -1,0 +1,8 @@
+# 查看表结构
+mysql> desc tableName;
+mysql> show columns from tableName;
+mysql> show create table tableName;
+mysql> show full fields from tableName;
+mysql> show fields from tableName;
+mysql> show tableName fieldsName;
++ 共6种方法，其最后一个可以查看某个表中的某一个成员的结构

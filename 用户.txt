@@ -1,0 +1,52 @@
+# 创建用户
+mysql> create user 'userName'@'host' identified by 'password';
++ host有3个选项：'localhost' 本地用户登录、'ipAddress' 固定ip登录、'%' 通配符，任意ip登录
+
+# 删除用户
+mysql> drop user 'userName'@'host';
+
+# 修改用户
+mysql> update mysql.user set user='newUserName' where user='oldUserName';
+
+# 显示数据库所有用户名
+mysql> select user from mysql.user;
+
+# 显示用户权限
+mysql> show grants for userName@'host' ;
+mysql> select * from mysql.user where user='userName';
+
+# 用户授权
+mysql> grant privileges on databaseName.tableName to 'userName'@'host';
+
+# 收回授权
+mysql> revoke privileges on databaseName.tableName from 'userName'@'host';
+
++ \g => ；  \g 等价分号；
++ \G 使输出的横向表格纵向输出 方便阅读 后面无需加分号
++ 例：mysql> select * from S_T.Student \G
++ 输出：
+*************************** 1. row ***************************
+  sno: 201215121
+sname: 李勇
+ ssex: 男
+ sage: 20
+sdept: CS
+*************************** 2. row ***************************
+  sno: 201215122
+sname: 刘晨
+ ssex: 女
+ sage: 19
+sdept: CS
+*************************** 3. row ***************************
+  sno: 201215123
+sname: 王敏
+ ssex: 女
+ sage: 18
+sdept: MA
+*************************** 4. row ***************************
+  sno: 201215125
+sname: 张立
+ ssex: 男
+ sage: 19
+sdept: IS
+4 rows in set (0.00 sec)
