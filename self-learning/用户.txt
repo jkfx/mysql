@@ -8,6 +8,9 @@ mysql> drop user 'userName'@'host';
 # 修改用户
 mysql> update mysql.user set user='newUserName' where user='oldUserName';
 
+# 查看当前登录用户
+mysql-> select user();
+
 # 显示数据库所有用户名
 mysql> select user from mysql.user;
 
@@ -17,6 +20,12 @@ mysql> select * from mysql.user where user='userName';
 
 # 用户授权
 mysql> grant privileges on databaseName.tableName to 'userName'@'host';
++ grant：用于管理访问权限，也就是给用户账号授权。当然它同样可以创建一个新的用户账户。
+mysql-> grant privileges on table to newUser@'host' identified by 'password';
++ grant只能创有密码的账户。
++ grant 作用在整个 MySQL 服务器上：
+grant select on . to dba@localhost; – dba可以查询 MySQL 中所有数据库中的表。
+grant all on . to dba@localhost; – dba可以管理 MySQL 中的所有数据库
 
 # 收回授权
 mysql> revoke privileges on databaseName.tableName from 'userName'@'host';
@@ -37,16 +46,4 @@ sname: 刘晨
  ssex: 女
  sage: 19
 sdept: CS
-*************************** 3. row ***************************
-  sno: 201215123
-sname: 王敏
- ssex: 女
- sage: 18
-sdept: MA
-*************************** 4. row ***************************
-  sno: 201215125
-sname: 张立
- ssex: 男
- sage: 19
-sdept: IS
-4 rows in set (0.00 sec)
+2 rows in set (0.00 sec)
