@@ -1,0 +1,7 @@
+一般格式：
+alter table <表名>
+[ add [column] <新列名><数据类型>[完整性约束] ]
+[ add <表级完整性约束> ]
+[ drop [column] <列名> [cascade|resrict] ]
+[ drio constraint <完整性约束名> [restrict|cascade] ]
+[ alter column <列名><数据类型> ]
