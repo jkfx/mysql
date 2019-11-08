@@ -1,0 +1,9 @@
+备份：mysqldump -hPup database [table1] [table2] ... > backup_file_address;
+-hPup：IP地址、端口、用户、密码
+
+例：mysqldump -u root -p S_T > f:/backup.sql;
+
+还原：mysql -hPup database < backup_file_address;
+-hPup：IP地址、端口、用户、密码
+
+例：mysql -u root -p S_T < f:/backup.sql;

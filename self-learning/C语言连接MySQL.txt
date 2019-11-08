@@ -1,0 +1,163 @@
+1. 连接：初始化一个连接句柄、实际进行连接
+函数原型:
+MYSQL *mysql_init(MYSQL *);
+MYSQL *mysql_real_connect(MYSQL *mysql,
+                              const char *host,
+                              const char *user,
+                              const char *passwd,
+                              const char *db,
+                              unsigned int port,
+                              const char *unix_socket,
+                              unsigned long client_flag);
+
+说明：
+mysql_real_connect()尝试与运行在主机上的MySQL数据库引擎建立连接。在你能够执行需要有效MySQL连接句柄结构的任何其他API函数之前，mysql_real_connect()必须成功完成
+
+例：
+MYSQL *conn_ptr;
+
+conn_ptr = mysql_init(NULL);
+if(!conn_ptr)
+{
+    ...//mysql_init failed
+}
+conn_ptr = mysql_real_connect(conn_ptr, "localhost", "sql_user_name", "sql_passwd", "test", 0, NULL, 0);
+if(conn_ptr)
+{
+    ...//connection success
+}
+else
+{
+    ...//connection failed
+}
+
+
+2. 错误处理
+函数原型：
+char *mysql_error(MYSQL *connection);
+说明：
+返回上一个MySQL操作产生的文本错误信息；若没有出错则返回''(空字符串)
+
+unsigned int mysql_errno(MYSQL *connection);
+说明：
+返回上一个MySQL操作中错误信息的数字编码；若没有出错则返回0(零)
+
+例：
+MYSQL *conn_ptr;
+
+conn_ptr = mysql_init(NULL);
+if(!conn_ptr)
+{
+    ...//mysql_init failed
+}
+conn_ptr = mysql_real_connect(conn_ptr, "localhost", "rick", "secret", "foo", 0, NULL, 0);
+if(conn_ptr)
+{
+    ...//connection success
+}
+else
+{
+    if(mysql_errno(conn_ptr))
+    {
+        fprintf(stderr, "Connection error %d: %s\n",mysql_errno(conn_ptr), mysql_error(conn_ptr));
+    }
+}
+
+
+3. 执行Sql语句
+函数原型：
+int mysql_query(MYSQL *connection, const char *query);
+说明：
+传入连接名和sql语句，成功返回0(零)
+
+int mysql_real_query(MYSQL *mysql, const char *query, unsigned int length);
+说明：
+执行由query指向的SQL查询，它应该是一个length个字节的字符串。查询必须由一个单个的SQL语句组成。你不应该在语句后增加一个终止的分号(“;”)或\g。
+对于包含二进制数据的查询，你必须使用mysql_real_query()而不是mysql_query()，因为二进制代码数据可能包含“\0”字符，而且，mysql_real_query()比mysql_query()更快，因为它不会在查询字符串上调用strlen()。如果查询成功，函数返回零
+
+4. 执行结果：
+不返回数据 (update,delete,insert)
+返回数据 (select)
+
+5. 不返回数据：
+这种情况比较简单，基本是只看成功与不成功
+
+例：
+YSQL *conn_ptr;
+...//初始化，连接数据库（省略）
+
+res = mysql_query(conn_ptr, "INSERT INTO ... VALUES(...)");
+if(!res)
+{
+    ...//success
+}
+else
+{
+    ...//error
+}
+
+6. 返回数据：
+执行查询(mysql_query) -> 提取数据(mysql_use_resualt\mysql_store_result) -> 处理数据(mysql_fetch_row) -> 清理工作(mysql_free_result)
+
+
+7. 提取数据
+函数原型：
+暂无
+
+例：
+MYSQL *conn_ptr;
+MYSQL_RES *res_ptr;
+MYSQL_ROW sqlrow;
+
+...//初始化，连接数据库（省略）
+
+res = mysql_query(conn_ptr, "SELECT ... FROM...");
+if(res)
+{
+    ...//error
+}
+else
+{
+    res_ptr = mysql_store_result(conn_ptr);
+    if(res_ptr)
+    {
+        while((sqlrow = mysql_fetch_row(res_ptr)))
+        {
+            ...
+        }
+    }
+    mysql_free_result(res_ptr);
+}
+mysql_close(conn_ptr);
+
+
+8. 处理数据
+从表中提取数据，即列数据、数据的数据，即元数据，例如列名和类型等
+
+函数原型：
+暂无
+
+例：
+MYSQL *conn_ptr;
+MYSQL_RES *res_ptr;
+MYSQL_ROW sqlrow;   
+unsigned int field_count=0;
+
+//初始化、连接、得到结果集（省略）
+
+while((sqlrow = mysql_fetch_row(res_ptr)))
+{
+    while(field_count < mysql_field_count(conn_ptr))
+    {
+        printf("%s ", sqlrow[field_count]);
+        field_count++;
+    }
+}
+
+
+9. 清理工作
+关闭连接(mysql_close)
+清内存(mysql_free_result)
+
+函数原型：
+暂无
